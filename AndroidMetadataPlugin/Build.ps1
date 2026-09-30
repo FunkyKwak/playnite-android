@@ -89,9 +89,19 @@ $DllPath = Join-Path $SubReleaseDir "AndroidMetadata.dll"
 if (-not (Test-Path $DllPath)) {
     throw "DLL compilée introuvable : $DllPath"
 }
-Copy-Item $DllPath $PackageDir -Force
+
+Get-ChildItem "$SubReleaseDir\*.dll" |
+    Where-Object { $_.Name -ne "Playnite.SDK.dll" } |
+    Copy-Item -Destination $PackageDir -Force
 
 
+Write-Host "=== CONTENU DU PACKAGE ==="
+
+Get-ChildItem $PackageDir -File |
+    Select-Object Name, Length |
+    Format-Table -AutoSize
+
+Write-Host "==========================="
 
 
 
@@ -102,13 +112,16 @@ Copy-Item $DllPath $PackageDir -Force
 Write-Host ""
 Write-Host "=== Packaging .pext ==="
 
-& $Toolbox pack `
+$Output = &  $Toolbox pack `
     $PackageDir `
     $ReleaseDir
+$PextPath = ($Output | Select-String -Pattern 'successfully packed as "([^"]+)"').Matches.Groups[1].Value
 
 if ($LASTEXITCODE -ne 0) {
     throw "Le packaging de l'extension a échoué."
 }
+Write-Host ""
+& "C:\Program Files\7-Zip\7z.exe" l $PextPath
 
 
 
@@ -116,7 +129,7 @@ if ($LASTEXITCODE -ne 0) {
 # Nettoyage du staging
 # ----------------------------------------------------------------------
 
-Remove-Item $PackageDir -Recurse -Force
+#Remove-Item $PackageDir -Recurse -Force
 
 
 # ----------------------------------------------------------------------
