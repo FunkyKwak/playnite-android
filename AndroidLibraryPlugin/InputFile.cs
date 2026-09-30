@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Playnite.SDK;
 
@@ -40,7 +41,18 @@ namespace AndroidLibrary
 
             GamePackageName = values[0];
             GameName = values[1];
-            if (DateTime.TryParse(values[2], out DateTime dt))
+
+
+            if (double.TryParse(values[2], NumberStyles.Float, CultureInfo.InvariantCulture, out double timestamp))
+            {
+                if (timestamp != 0)
+                {
+                    LastTimePlayed = DateTimeOffset
+                        .FromUnixTimeMilliseconds((long)(timestamp * 1000))
+                        .LocalDateTime;
+                }
+            }
+            else if (DateTime.TryParse(values[2], out DateTime dt))
                 LastTimePlayed = dt;
 
             logger.Debug($"------------- Date '{values[2]}' parsée en '{LastTimePlayed}'");
