@@ -1,3 +1,4 @@
+using AndroidCommon;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -47,7 +48,7 @@ namespace AndroidMetadata
         private readonly Game game;
         private readonly GooglePlayClient googlePlayClient;
 
-        private GooglePlayGame? googlePlayGame;
+        private AndroidGameMetadata googlePlayGame;
         private bool loaded;
 
 

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Controls;
-
+using AndroidCommon;
 
 namespace AndroidLibrary
 {
@@ -84,6 +84,11 @@ namespace AndroidLibrary
                     Source = new MetadataNameProperty("Android")
                 };
             }
+        }
+
+        public override LibraryMetadataProvider GetMetadataDownloader()
+        {
+            return new AndroidLibraryMetadataProvider(logger);
         }
     }
 }

@@ -5,64 +5,48 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AndroidMetadata
+namespace AndroidCommon
 {
-    public class GooglePlayGame
-    {
-        public string? PackageName { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public string? IconUrl { get; set; }
-        public string? Developer { get; set; }
-        public string? DeveloperUrl { get; set; }
-        public string? Category { get; set; }
-        public string? AgeRating { get; set; }
-        public double? Rating { get; set; }
-        public long? RatingCount { get; set; }
-        public string? Price { get; set; }
-        public string? Currency { get; set; }
-    }
-
     internal class GooglePlayJsonLd
     {
         [JsonProperty("@type")]
-        public string? Type { get; set; }
-        public string? Name { get; set; }
-        public string? Url { get; set; }
-        public string? Description { get; set; }
-        public string? OperatingSystem { get; set; }
-        public string? ApplicationCategory { get; set; }
-        public string? Image { get; set; }
-        public string? ContentRating { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string Description { get; set; }
+        public string OperatingSystem { get; set; }
+        public string ApplicationCategory { get; set; }
+        public string Image { get; set; }
+        public string ContentRating { get; set; }
 
-        public GooglePlayAuthor? Author { get; set; }
-        public GooglePlayAggregateRating? AggregateRating { get; set; }
-        public GooglePlayOffer[]? Offers { get; set; }
+        public GooglePlayAuthor Author { get; set; }
+        public GooglePlayAggregateRating AggregateRating { get; set; }
+        public GooglePlayOffer[] Offers { get; set; }
     }
 
     internal class GooglePlayAuthor
     {
         [JsonProperty("@type")]
-        public string? Type { get; set; }
-        public string? Name { get; set; }
-        public string? Url { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
     }
 
     internal class GooglePlayAggregateRating
     {
         [JsonProperty("@type")]
-        public string? Type { get; set; }
-        public string? RatingValue { get; set; }
-        public string? RatingCount { get; set; }
+        public string Type { get; set; }
+        public string RatingValue { get; set; }
+        public string RatingCount { get; set; }
     }
 
     internal class GooglePlayOffer
     {
         [JsonProperty("@type")]
-        public string? Type { get; set; }
-        public string? Price { get; set; }
-        public string? PriceCurrency { get; set; }
-        public string? Availability { get; set; }
+        public string Type { get; set; }
+        public string Price { get; set; }
+        public string PriceCurrency { get; set; }
+        public string Availability { get; set; }
     }
 
     public class GooglePlayClient
@@ -79,7 +63,7 @@ namespace AndroidMetadata
                 "Chrome/140.0.0.0 Safari/537.36");
         }
 
-        public async Task<GooglePlayGame?> GetGameAsync(
+        public async Task<AndroidGameMetadata> GetGameAsync(
             string packageName,
             CancellationToken cancellationToken)
         {
@@ -111,7 +95,7 @@ namespace AndroidMetadata
             }
         }
 
-        private GooglePlayGame? ParseGame(
+        private AndroidGameMetadata ParseGame(
             string html,
             string packageName)
         {
@@ -155,7 +139,7 @@ namespace AndroidMetadata
                 if (string.IsNullOrWhiteSpace(json))
                     continue;
 
-                GooglePlayJsonLd? data = null;
+                GooglePlayJsonLd data = null;
 
                 try
                 {
@@ -178,7 +162,7 @@ namespace AndroidMetadata
                     continue;
                 }
 
-                var game = new GooglePlayGame
+                var game = new AndroidGameMetadata
                 {
                     PackageName = packageName,
                     Name = data.Name,

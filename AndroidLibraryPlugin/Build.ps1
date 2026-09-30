@@ -5,11 +5,15 @@ $Toolbox = Join-Path $env:LOCALAPPDATA "Playnite\Toolbox.exe"
 
 $ProjectDir = $PSScriptRoot
 $ProjectFile = Join-Path $ProjectDir "AndroidLibrary.csproj"
-
-
 $BinDir = Join-Path $ProjectDir "bin"
 $ReleaseDir = Join-Path $BinDir "Release"
 $SubReleaseDir = Join-Path $ReleaseDir "net462"
+
+$CommonProjectDir = Join-Path (get-item $PSScriptRoot).parent.FullName "AndroidCommon"
+$CommonProjectFile = Join-Path $CommonProjectDir "AndroidCommon.csproj"
+$CommonBinDir = Join-Path $CommonProjectDir "bin"
+$CommonReleaseDir = Join-Path $CommonBinDir "Release"
+$CommonSubReleaseDir = Join-Path $CommonReleaseDir "net462"
 
 
 $PackageDir = Join-Path $BinDir "Package"
@@ -61,6 +65,18 @@ Get-ChildItem $ReleaseDir -File |
 # ----------------------------------------------------------------------
 
 Write-Host ""
+Write-Host "=== Compilation Common ==="
+
+dotnet build `
+    $CommonProjectFile `
+    /property:GenerateFullPaths=true `
+    /p:Configuration=Release `
+    /p:Platform=AnyCPU `
+    /consoleloggerparameters:NoSummary
+
+if ($LASTEXITCODE -ne 0) {
+    throw "La compilation a échoué."
+}
 Write-Host "=== Compilation ==="
 
 dotnet build `

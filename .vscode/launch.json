@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build ALL",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": ".\\AndroidLibraryPlugin\\Build.ps1 | .\\AndroidMetadataPlugin\\Build.ps1",
+            "cwd": "${cwd}"
+        },
+        {
+            "name": "Build Library",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": ".\\AndroidLibraryPlugin\\Build.ps1",
+            "cwd": "${cwd}"
+        },
+        {
+            "name": "Build Metadata",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": ".\\AndroidMetadataPlugin\\Build.ps1",
+            "cwd": "${cwd}"
+        }
+    ]
+}
