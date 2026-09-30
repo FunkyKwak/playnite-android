@@ -1,9 +1,10 @@
 $ErrorActionPreference = "Stop"
 
-$ProjectDir = Join-Path $PSScriptRoot "AndroidLibraryPlugin"
-
-$ProjectFile = Join-Path $ProjectDir "AndroidLibrary.csproj"
 $Toolbox = Join-Path $env:LOCALAPPDATA "Playnite\Toolbox.exe"
+
+
+$ProjectDir = $PSScriptRoot
+$ProjectFile = Join-Path $ProjectDir "AndroidMetadata.csproj"
 
 
 $BinDir = Join-Path $ProjectDir "bin"
@@ -84,7 +85,7 @@ Write-Host "=== Préparation de l'extension ==="
 
 Copy-Item (Join-Path $ProjectDir "extension.yaml") $PackageDir -Force
 
-$DllPath = Join-Path $SubReleaseDir "AndroidLibrary.dll"
+$DllPath = Join-Path $SubReleaseDir "AndroidMetadata.dll"
 if (-not (Test-Path $DllPath)) {
     throw "DLL compilée introuvable : $DllPath"
 }

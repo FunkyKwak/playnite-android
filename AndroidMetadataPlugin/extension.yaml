@@ -1,0 +1,7 @@
+Id: android-metadata
+Name: Android Metadata
+Author: FunkyKwak
+Version: 0.1
+Module: AndroidMetadata.dll
+Type: MetadataProvider
+Icon: icon.png
