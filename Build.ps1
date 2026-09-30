@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$ProjectDir = $PSScriptRoot
+$ProjectDir = Join-Path $PSScriptRoot "AndroidLibraryPlugin"
 
 $ProjectFile = Join-Path $ProjectDir "AndroidLibrary.csproj"
 $Toolbox = Join-Path $env:LOCALAPPDATA "Playnite\Toolbox.exe"
