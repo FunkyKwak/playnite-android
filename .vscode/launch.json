@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Extract CSV from Google TakeOut",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "AndroidCommon\\ExtractCsvFromGoogleTakeOut.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Build ALL",
             "type": "PowerShell",
             "request": "launch",

@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Controls;
 using AndroidCommon;
+using System.Linq;
 
 namespace AndroidLibrary
 {
     public class AndroidLibrary : LibraryPlugin
     {
         private readonly ILogger logger;
+        private readonly IPlayniteAPI playniteApi;
 
         public override Guid Id => Guid.Parse("7e6d2f35-8b8e-4f4d-a9e4-2c8f6b1d73a1");
 
@@ -36,6 +38,7 @@ namespace AndroidLibrary
 
         public AndroidLibrary(IPlayniteAPI api) : base(api)
         {
+            this.playniteApi = api;
             Properties = new LibraryPluginProperties
             {
                 HasSettings = true
@@ -59,30 +62,49 @@ namespace AndroidLibrary
                 yield break;
             }
 
-            foreach (var line in File.ReadLines(filePath))
+            InputFile inputFile = new InputFile(filePath, logger);
+
+            logger.Info($"Start reading file '{filePath}'");
+            logger.Debug($"{inputFile.Lines.Count} lines");
+            foreach (InputFileLine line in inputFile.Lines)
             {
-                string[] values = line.Split(',');
-                string gamePackageName = values[0];
-                string gameName = values[1];
+                logger.Info($"Search matching game");
+                logger.Debug($"{playniteApi?.Database?.Games?.Count} games");
+                Game matchingGame = playniteApi.Database.Games.SingleOrDefault(i => i.Source.Name == "Android" && i.GameId == line.GamePackageName);
 
-                if (string.IsNullOrWhiteSpace(gamePackageName))
-                    continue;
-                if (string.IsNullOrWhiteSpace(gameName))
-                    continue;
-
-                logger.Info($"Jeu Android trouvé : {gameName} ({gamePackageName})");
-
-                yield return new GameMetadata
+                if (matchingGame != null)
                 {
-                    GameId = gamePackageName,
-                    //Name = gameName,
-
-                    Platforms = new HashSet<MetadataProperty>
+                    if (!matchingGame.IsInstalled)
                     {
-                        new MetadataNameProperty("Android")
-                    },
-                    Source = new MetadataNameProperty("Android")
-                };
+                        logger.Info($"Jeu Android installé : {matchingGame.Name}");
+                        matchingGame.IsInstalled = true;
+                    }
+                    matchingGame.LastActivity = line.LastTimePlayed;
+                }
+                else
+                {
+                    logger.Info($"Nouveau jeu Android installé : {matchingGame.Name}");
+                    yield return new GameMetadata
+                    {
+                        GameId = line.GamePackageName,
+                        Platforms = new HashSet<MetadataProperty>
+                        {
+                            new MetadataNameProperty("Android")
+                        },
+                        Source = new MetadataNameProperty("Android"),
+                        IsInstalled = true
+                    };
+                }
+            }
+
+            logger.Info($"Mark games as uninstalled");
+            foreach (Game game in playniteApi.Database.Games.Where(i => i.Source.Name == "Android"))
+            {
+                if (!inputFile.Lines.Exists(i => i.GamePackageName == game.GameId))
+                {
+                    logger.Info($"Jeu Android désinstallé : {game.Name}");
+                    game.IsInstalled = false;
+                }
             }
         }
 
