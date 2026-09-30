@@ -75,7 +75,13 @@ namespace AndroidLibrary
                 yield return new GameMetadata
                 {
                     GameId = gamePackageName,
-                    Name = gameName
+                    //Name = gameName,
+
+                    Platforms = new HashSet<MetadataProperty>
+                    {
+                        new MetadataNameProperty("Android")
+                    },
+                    Source = new MetadataNameProperty("Android")
                 };
             }
         }
