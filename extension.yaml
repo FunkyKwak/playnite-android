@@ -1,0 +1,7 @@
+Id: android-library
+Name: Android Library
+Author: FunkyKwak
+Version: 0.1
+Module: AndroidLibrary.dll
+Type: GameLibrary
+Icon: icon.png

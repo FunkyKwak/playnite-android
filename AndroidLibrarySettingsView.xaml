@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="AndroidLibrary.AndroidLibrarySettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Margin="30">
+
+    <TextBlock>Fichier avec la liste des applications installées :</TextBlock>
+    <TextBox
+        Text="{Binding InstalledAppsFilePath}"
+        Width="400"
+        Margin="0,20,0,0"/>
+
+    </StackPanel>
+
+</UserControl>
