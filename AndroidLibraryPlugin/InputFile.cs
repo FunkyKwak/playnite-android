@@ -34,10 +34,9 @@ namespace AndroidLibrary
 
         public InputFileLine(string line, ILogger logger)
         {
-            logger.Debug($"line '{line}'");
+            logger.Debug($"-------------line '{line}'");
 
             string[] values = line.Split(',');
-            logger.Debug($"longueur {values.Length}");
 
             GamePackageName = values[0];
             GameName = values[1];
@@ -55,7 +54,7 @@ namespace AndroidLibrary
             else if (DateTime.TryParse(values[2], out DateTime dt))
                 LastTimePlayed = dt;
 
-            logger.Debug($"------------- Date '{values[2]}' parsée en '{LastTimePlayed}'");
+            logger.Debug($"Date '{values[2]}' parsée en '{LastTimePlayed}'");
 
             logger.Info($"Jeu Android trouvé : {GameName} ({GamePackageName})");
         }

@@ -70,7 +70,7 @@ namespace AndroidLibrary
             {
                 logger.Info($"Search matching game");
                 logger.Debug($"{playniteApi?.Database?.Games?.Count} games");
-                Game matchingGame = playniteApi.Database.Games.SingleOrDefault(i => i.Source.Name == "Android" && i.GameId == line.GamePackageName);
+                Game matchingGame = playniteApi.Database.Games.SingleOrDefault(i => i.Source?.Name == "Android" && i.GameId == line.GamePackageName);
 
                 if (matchingGame != null)
                 {
@@ -83,7 +83,7 @@ namespace AndroidLibrary
                 }
                 else
                 {
-                    logger.Info($"Nouveau jeu Android installé : {matchingGame.Name}");
+                    logger.Info($"Nouveau jeu Android installé : {line.GameName}");
                     yield return new GameMetadata
                     {
                         GameId = line.GamePackageName,
