@@ -190,6 +190,8 @@ flowchart TB
     n1["Android phone"] --> s3
     n11 --> s2
 
+    n4@{ shape: card}
+    n5@{ shape: card}
     n8@{ shape: text}
     n9@{ shape: text}
     n10@{ shape: text}
@@ -198,9 +200,7 @@ flowchart TB
     n13@{ shape: text}
     n14@{ shape: text}
     n2@{ shape: text}
-    n5@{ icon: "fa:file-lines", pos: "b"}
     n3@{ shape: text}
-    n4@{ icon: "fa:file-lines", pos: "b"}
     n7@{ shape: text}
     n1@{ shape: text}
 
