@@ -47,13 +47,13 @@ It receives the Android package name from Playnite and can use it to identify th
 
 Keeping this functionality separate from the Library Plugin follows Playnite's plugin model and allows each plugin to have a single responsibility.
 
-## Synchronization model
+## Installation
 
-1. Generate CSV
+### 1. Process to automatically generate CSV file from your phone
 
 The Android automation tool [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate&hl=fr) generates a text file containing the package, the name and the last timestamp for each currently installed application:
 
-```text
+```csv
 com.chucklefish.stardewvalley,Stardew Valley,1.790365626798E9
 io.anuke.mindustry,Mindustry,
 com.sadpuppy.lemmings,Lemmings,
@@ -63,23 +63,43 @@ com.sadpuppy.lemmings,Lemmings,
 Here is the [Automate flow](/Sync%20game%20list.flo) I use to generate the file.
 
 
-2. Synchronisation
+### 2. Synchronise the file to your computer
 
 The file is synchronized to the computer running Playnite, using [syncthing](https://syncthing.net/)
 
 
-3. Playnite - Library Plugin
-The Library Plugin compares this list with the Android games already present in Playnite:
+### 3. Playnite - Library Plugin
 
-```text
-Playnite library
-       │
-       ├── Package present in InstalledApps.txt
-       │          └── Installed = true
-       │
-       └── Package absent from InstalledApps.txt
-                  └── Installed = false
-```
+Install the [two `.pext` package files](https://github.com/FunkyKwak/playnite-android/releases/latest) in Playnite:
+
+1. Double-clic on each package file
+2. Restart Playnite when requested
+3. In the library plugin settings, set the csv file path:
+
+    ![library-settings](docs\images\library-settings.png)
+
+The two plugins are independent and can be updated separately.
+
+
+
+
+## Initial import (optional)
+
+If you want to import all games you've played on your Android phone before, and uninstalled afterwise, you can do the following:
+1. [Google Takeout](https://takeout.google.com/): Export "Google Play Games services" and "Google Play Store"
+2. Generate a CSV out of it, using the python script [ExtractCsvFromGoogleTakeOut.py](/AndroidCommon/ExtractCsvFromGoogleTakeOut.py)
+3. Use the generated file in the Android Library plugin settings (restart Playnite)
+4. Sync Android games
+    &rarr; all games will be added to your Playnite library and marked as installed. They will be updated as not installed on the next sync with the csv file from your phone
+
+
+## How it works
+
+### How the plugin works
+
+The Library Plugin compares the CSV file with the Android games already present in Playnite:
+- Playnite game found in the CSV file &rarr; Installed = true
+- Playnite game not found in the CSV file &rarr; Installed = false
 
 If the game is not present in the Playnite library, it adds it and get Metadata using the information scrapped on the Google Play store.
 
@@ -137,19 +157,7 @@ This is particularly useful for metadata lookup because game names can be ambigu
 The package name is therefore used as the Playnite `GameId`.
 </details>
 
-
-## Initial import (optional)
-
-If you want to import all games you've played on your Android phone before, and uninstalled afterwise, you can do the following:
-1. [Google Takeout](https://takeout.google.com/): Export "Google Play Games services" and "Google Play Store"
-2. Generate a CSV out of it, using the python script [ExtractCsvFromGoogleTakeOut.py](/AndroidCommon/ExtractCsvFromGoogleTakeOut.py)
-3. Use the generated file in the Android Library plugin settings (restart Playnite)
-4. Sync Android games
-
-
-## Data flow
-
-The complete workflow looks like this:
+### Data flow
 
 ```mermaid
 ---
@@ -159,8 +167,8 @@ config:
 flowchart TB
  subgraph s1["Android Library"]
         n8["Plugin"]
-        n9["Create/update games"]
-        n10["Update Installed"]
+        n10["Update 'Installed' status"]
+        n9["Add new game"]
         n11["Playnite"]
   end
  subgraph s2["Android Metadata"]
@@ -205,17 +213,4 @@ flowchart TB
     n1@{ shape: text}
 
 ```
-
-## Installation
-
-Install the two `.pext` files in Playnite:
-
-1. Open **Playnite**.
-2. Open **Add-ons**.
-3. Select **Install from file**.
-4. Install the Android Library Plugin.
-5. Install the Android Metadata Plugin.
-6. Configure the path to the `InstalledApps.txt` file in the Android Library Plugin settings.
-
-The two plugins are independent and can be updated separately.
 
