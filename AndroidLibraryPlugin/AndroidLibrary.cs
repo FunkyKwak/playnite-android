@@ -69,14 +69,13 @@ namespace AndroidLibrary
             foreach (InputFileLine line in inputFile.Lines)
             {
                 logger.Info($"Search matching game");
-                logger.Debug($"{playniteApi?.Database?.Games?.Count} games");
                 Game matchingGame = playniteApi.Database.Games.SingleOrDefault(i => i.Source?.Name == "Android" && i.GameId == line.GamePackageName);
 
                 if (matchingGame != null)
                 {
+                    logger.Info($"Jeu Android existant : {matchingGame.Name}");
                     if (!matchingGame.IsInstalled)
                     {
-                        logger.Info($"Jeu Android installé : {matchingGame.Name}");
                         matchingGame.IsInstalled = true;
                     }
                     matchingGame.LastActivity = line.LastTimePlayed;

@@ -21,6 +21,8 @@ namespace AndroidLibrary
                 InputFileLine newLine = new InputFileLine(line, logger);
                 if (!string.IsNullOrWhiteSpace(newLine.GamePackageName) && !string.IsNullOrWhiteSpace(newLine.GameName))
                     Lines.Add(newLine);
+                else
+                    logger.Warn("Jeu non ajouté (donnée manquante) : " + line);
             }
         }
 
